@@ -8,6 +8,8 @@ const {
 } = require('./config')
 const errorHandler = require('./middleware/error-handler')
 const pancakeRouter = require('./pancake/pancake-router')
+const foldersRouter = require('./folders/folders-router');
+const notesRouter = require('./notes/notes-router')
 
 const app = express()
 
@@ -24,6 +26,8 @@ app.use(helmet())
 app.use(express.static('public'))
 
 app.use('/api/pancakes', pancakeRouter)
+//app.use('/api/folders', foldersRouter);
+//app.use('/api/notes', notesRouter);
 app.use(errorHandler)
 
 module.exports = app
