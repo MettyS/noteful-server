@@ -20,10 +20,12 @@ notesRouter.route('/')
 
     const nameValidationError = NotesService.validateName(name);
     if(nameValidationError){
+      nameValidationError.note = {name, content, folder_id};
       return res.status(400).json(nameValidationError);
     }
     const contentValidationError = NotesService.validateContent(content);
     if(contentValidationError){
+      contentValidationError.note = {name, content, folder_id}
       return res.status(400).json(contentValidationError);
     }
     
