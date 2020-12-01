@@ -15,6 +15,33 @@ notesRouter.route('/')
       })
       .catch(next)
   })
+  .post(jsonParser, (req, res, next) => {
+    const { name, content, folder_id } = req.body;
+
+    const nameValidationError = NotesService.validateName(name);
+    if(nameValidationError){
+      return res.status(400).json(nameValidationError);
+    }
+    const contentValidationError = NotesService.validateContent(content);
+    if(contentValidationError){
+      return res.status(400).json(contentValidationError);
+    }
+    
+    const newNote = {
+      name,
+      content,
+      folder_id
+    };
+
+    NotesService.addNote(req.app.get('db'), newNote)
+      .then(addedNote => {
+        console.log('the added note is: ', addedNote);
+        res.status(201)
+          .location(path.posix.join(req.originalUrl, `/${addedNote.folder_id}/${addedNote.id}`))
+          .json(NotesService.serializeNote(addedNote));
+      })
+     .catch(next);
+    })
 
 notesRouter.route('/:folder_id')
   .all( (req, res, next) => {
