@@ -93,6 +93,54 @@ notesRouter.route('/:folder_id')
       })
      .catch(next);
     })
+
+notesRouter.route('/:note_id')
+  .all((req, res, next) => {
+    const {note_id} = req.params;
+    NotesService.getNoteById(req.app.get('db'), note_id)
+      .then(noteWithId => {
+        if(!noteWithId){
+          return res.status(404).json({error:{message: `Note does note exist`}})
+        }
+
+        res.note = noteWithId;
+        next();
+      })
+      .catch(next);
+  })
+  .delete((req, res, next) => {
+    NotesService.deleteNote(req.app.get('db'), res.note.id)
+      .then(numRowsDeleted => {
+        console.log('deleted rows number: ', numRowsDeleted);
+        res.status(204).end();
+      })
+      .catch(next);
+  })
+  .patch( jsonParser, (req, res, next) => {
+    const {name, content} = req.body;
+    const noteToPatchWith = {
+      name,
+      content,
+      modified: now()
+    };
+
+    const nameValidationError = NotesService.validateName(name);
+    if(nameValidationError){
+      return res.status(400).json(nameValidationError);
+    }
+    const contentValidationError = NotesService.validateContent(content);
+    if(contentValidationError){
+      return res.status(400).json(contentValidationError);
+    }
+
+    NotesService.updateNote(req.app.get('db'), noteToPatchWith)
+      .then(updatedNote => {
+        console.log('the note has been updated to: ', updatedNote);
+        res.status(200).json(NotesService.serializeNote(updatedNote))
+      })
+      .catch(next);
+  })
+
     
 notesRouter.route('/:folder_id/:note_id')
   .all( (req, res, next) => {
