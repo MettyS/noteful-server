@@ -16,21 +16,21 @@ notesRouter.route('/')
       .catch(next)
   })
   .post(jsonParser, (req, res, next) => {
-    const { name, content, folder_id } = req.body;
+    const { note_name, content, folder_id } = req.body;
 
-    const nameValidationError = NotesService.validateName(name);
+    const nameValidationError = NotesService.validateName(note_name);
     if(nameValidationError){
-      nameValidationError.note = {name, content, folder_id};
+      nameValidationError.note = {note_name, content, folder_id};
       return res.status(400).json(nameValidationError);
     }
     const contentValidationError = NotesService.validateContent(content);
     if(contentValidationError){
-      contentValidationError.note = {name, content, folder_id}
+      contentValidationError.note = {note_name, content, folder_id}
       return res.status(400).json(contentValidationError);
     }
     
     const newNote = {
-      name,
+      note_name,
       content,
       folder_id
     };
@@ -71,14 +71,14 @@ notesRouter.route('/:note_id')
       .catch(next);
   })
   .patch( jsonParser, (req, res, next) => {
-    const {name, content} = req.body;
+    const {note_name, content} = req.body;
     const noteToPatchWith = {
-      name,
+      note_name,
       content,
       modified: now()
     };
 
-    const nameValidationError = NotesService.validateName(name);
+    const nameValidationError = NotesService.validateName(note_name);
     if(nameValidationError){
       return res.status(400).json(nameValidationError);
     }

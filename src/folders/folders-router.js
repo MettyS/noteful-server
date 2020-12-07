@@ -18,15 +18,15 @@ foldersRouter.route('/')
   })
 
   .post(jsonParser, (req, res, next) => {
-    const { name } = req.body;
+    const { folder_name } = req.body;
 
-    const validationError = FoldersService.validateName(name);
+    const validationError = FoldersService.validateName(folder_name);
     if(validationError){
       return res.status(400).json(validationError);
     }
     
     const newFolder = {
-      name
+      folder_name
     };
 
     FoldersService.addFolder(req.app.get('db'), newFolder)
@@ -61,9 +61,9 @@ foldersRouter.route('/:folder_id')
       .catch(next);
   })
   .patch( jsonParser, (req, res, next) => {
-    const {name} = req.body;
+    const {folder_name} = req.body;
     const folderToPatchWith = {
-      name
+      folder_name
     };
 
     FoldersService.updateFolder(req.app.get('db'), folderToPatchWith)

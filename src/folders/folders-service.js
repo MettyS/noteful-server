@@ -4,7 +4,7 @@ const FoldersService = {
   serializeFolder(folder) {
     return {
       id: folder.id,
-      name: xss(folder.name),
+      folder_name: xss(folder.folder_name),
     }
   },
   getFolders(db) {
@@ -42,13 +42,13 @@ const FoldersService = {
   validateName(name) {
     let erObj = null;
     if(!name){
-      erObj = {error: {message: `'name' must be provided`}}
+      erObj = {error: {message: `'folder_name' must be provided`}}
     }
     else if(typeof(name) !== 'string'){
-      erObj = {error: {message: `'name' must be a string`}}
+      erObj = {error: {message: `'folder_name' must be a string`}}
     }
     else if(name == ''){
-      erObj = {error: {message: `'name' cannot be empty`}}
+      erObj = {error: {message: `'folder_name' cannot be empty`}}
     }
 
     return erObj;

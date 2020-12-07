@@ -5,7 +5,8 @@ const notesService = {
     return {
       id: note.id,
       modified: note.modified,
-      name: xss(note.name),
+      date_created: note.date_created,
+      note_name: xss(note.note_name),
       folder_id: note.folder_id,
       content: xss(note.content)
     }
@@ -55,13 +56,13 @@ const notesService = {
   validateName(name) {
     let erObj = null;
     if(!name){
-      erObj = {error: {message: `'name' must be provided`}}
+      erObj = {error: {message: `'note_name' must be provided`}}
     }
     else if(typeof(name) !== 'string'){
-      erObj = {error: {message: `'name' must be a string`}}
+      erObj = {error: {message: `'note_name' must be a string`}}
     }
     else if(name == ''){
-      erObj = {error: {message: `'name' cannot be empty`}}
+      erObj = {error: {message: `'note_name' cannot be empty`}}
     }
 
     return erObj;
